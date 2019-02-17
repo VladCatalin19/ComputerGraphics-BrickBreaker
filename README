@@ -45,12 +45,12 @@ s-a ciocnit de mai multe ori cu cărămida.
     Pentru reprezentarea obiectelor din scenă am folosit următoarea ierarhie de
 clase în stil orientat pe obiect, în filtrul Entities :
 
-				  Entity
+		  Entity
                   ^ ^ ^ ^
   ________________| | | |__________________________
   |                 | |________________           |
   |                 |                 |           |
-Circle			Rectangle			Square		  |
+Circle		Rectangle	    Square	  |
  ^               ^ ^ ^                 ^          |
  |        _______| | |_________        |          |
  |        |        |          |        |          |
