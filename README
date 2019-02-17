@@ -1,0 +1,84 @@
+-------------------------------------------------------------------------------
+Vlad Marius-Cătălin 335CC
+Anul III Semestrul I
+Tema1 Elemente de Grafică pe Calculator
+-------------------------------------------------------------------------------
+
+    1) Descriere joc:
+    
+    Folosind mouse-ul, jucătorul poate mișca platforma pe axa OX. La începutul
+jocului, bila este atașată platformei, la apăsarea click stânga, bila este tri-
+misă în scenă. Bila se va ciocni de cărămizi, pereți sau platformă. Direcția a-
+cesteia se va schimba în funcție de direcția de unde a venit,  în cazul ciocni-
+rii cu cărămizi sau pereți, sau în funcție de distanța de la centrul platformei
+dacă lovește platforma așa cum este prezentat în enunț.
+    Cărămizile din scenă sunt de mai multe feluri,  carămizi normale  (1 punct
+viață), cărămizi duble  (2 puncte viață),  cărămizi triple (3 puncte viață) și
+cărămidă finală  (trebuie distrusă ultima din scenă).  Cărămizile normale sunt
+roz, cele duble roz mai închis, cele triple violet închis, iar cea finală este
+bleu.
+    Power up-urile sunt de trei feluri, cel care face bila mai mare, cel care
+face platforma mai mare și cel care dezactivează reflexia.
+    Jocul are trei niveluri,  primul fiind cel mai ușor,  iar ultimul cel mai
+greu. Fiecare nivel are număr diferit de vieți, cărămizi diferite, probabilită-
+ți diferite de apariții a power up-uri și bila are viteze diferite.
+    Pentru a avansa la nivelul următor, jucătorul trebuie să spargă toate cără-
+mizile din scenă. La ultimul nivel,  dacă toate cărămizile sunt distruse, jucă-
+torul se va întoarce la primul nivel.  Dacă în timpul nivelului jucătorul pier-
+de toate viețile acesta va fi trimis la nivelul întâi.
+
+
+    Probleme nerezolvate:
+    Este posibil, datărită unor diferențe de latență, ca diferența de timp din-
+tre 2 cadre să nu fie constantă.  Astfel, la coliziuni, bila poate intra în ci-
+clu de schimbare a direcției și va rămâne blocată în pereți până când ori va
+ieși din perete ori va ieși din perete. De asemenea, la ciocnirea cu cărămizile,
+se pot înregistra 2 ciocniri în loc de 1 deoarece programul consideră că bila
+s-a ciocnit de mai multe ori cu cărămida.
+    Am adăugat mai multe vieți în nivelurile unde această problemă apare mai
+  des.
+
+
+
+    2) Implementare joc:
+
+    Pentru reprezentarea obiectelor din scenă am folosit următoarea ierarhie de
+clase în stil orientat pe obiect, în filtrul Entities :
+
+				  Entity
+                  ^ ^ ^ ^
+  ________________| | | |__________________________
+  |                 | |________________           |
+  |                 |                 |           |
+Circle			Rectangle			Square		  |
+ ^               ^ ^ ^                 ^          |
+ |        _______| | |_________        |          |
+ |        |        |          |        |          |
+Ball	Wall	Platform	Brick	PowerUps    Lives
+
+    Entity conține poziția și culoarea obiectelor. Circle are în plus raza cer-
+cului, Rectangle lățimea și lungimea dreptunghiului, iar Square are lungimea u-
+nei laturi.  Clasele de jos reprezintă obiectele care vor fi desenate în scenă.
+    În filtrul Levels clasa Levels conține logica de desfășurare a unui nivel.
+Un nivel conține 3 pereți, o platformă, o bilă, o matrice cu cărămizi, viețile
+jucătorului și un vector care reține power up-urile active. Nivelul are un set
+de constante care se inițializează două metode InitConstants (constantele care
+sunt aceleași pentru toate nivelurile) și InitLevelDependentConstants (constan-
+tele care depind de nivel și care oferă diversitate nivelurilor).
+    Clasele Level1, Level2, Level3 moștenesc clasa Level și fiecare reprezintă
+un nivel diferit.
+    Clasa Tema1 are rol de manager de niveluri, desenare scenă și trimitere in-
+put de la mouse către niveluri. Când un nivel se termină, această clasă va
+schimba nivelul cu cel corespunzător, în cazul în care nivelul este câștigat
+sau pierdut.
+    Desenarea se face folosind biblioteca de desenare și transformări 2D din
+laboratorul 3. Pentru fiecare obiect diferit se reține un mesh și este transla-
+tat și scalat în poziția salvată în clasa respectivă.
+
+
+
+    3) Bibliografie :
+    https://stackoverflow.com/a/402010 Algoritm de detecție a coliziunilor din-
+tre un cerc și un dreptunghi
+    https://gamedev.stackexchange.com/a/10917 Algoritm de calculare a direcției
+bilei după ciocnirea colțului unei cărămizi.
