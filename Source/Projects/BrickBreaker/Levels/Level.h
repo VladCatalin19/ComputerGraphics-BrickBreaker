@@ -116,6 +116,7 @@ protected:
     // Checks if a circle intersects a rectangle
     glm::vec3 CircleRectIntersect(BrickBreakerObjects::Ball *circle,
                                   BrickBreakerObjects::Rectangle *rect);
+    void ChangeBallPositionAfterCollisionWall(int wallIndex);
     void ChangeBallDirectionAfterCollision(glm::vec3 direction);
     void CheckWallColisionAndUpdateBall();
     void CheckPlatformCollisionAndUpdateBall();
