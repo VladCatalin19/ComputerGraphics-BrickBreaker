@@ -235,6 +235,36 @@ glm::vec3 Level::CircleRectIntersect(BrickBreakerObjects::Ball *circle,
                      0.0f);
 }
 
+void Level::ChangeBallPositionAfterCollisionWall(int wallIndex) {
+    if (wallIndex == -1) {
+        return;
+    }
+
+    float xCoord;
+    float yCoord;
+
+    switch (wallIndex) {
+
+    case 0: {
+        xCoord = walls[wallIndex]->GetPosition().x
+               + walls[wallIndex]->GetWidth() + ball->GetRadius();
+        yCoord = ball->GetPosition().y;
+        break;
+    }
+
+    case 1:
+        xCoord = ball->GetPosition().x;
+        yCoord = walls[wallIndex]->GetPosition().y - ball->GetRadius();
+        break;
+
+    case 2:
+        xCoord = walls[wallIndex]->GetPosition().x - ball->GetRadius();
+        yCoord = ball->GetPosition().y;
+        break;
+    }
+    ball->SetPosition(glm::vec3(xCoord, yCoord, 0.0f));
+}
+
 void Level::ChangeBallDirectionAfterCollision(glm::vec3 direction) {
     if (direction != glm::vec3(0.0f, 0.0f, 0.0f)) {
         glm::vec3 newDirection;
@@ -249,20 +279,19 @@ void Level::ChangeBallDirectionAfterCollision(glm::vec3 direction) {
 }
 
 void Level::CheckWallColisionAndUpdateBall() {
-    glm::vec3 direction = glm::vec3(0.0f, 0.0f, 0.0f);
-    glm::vec3 aux;
+    glm::vec3 direction;
 
     // Check collision with all walls and, if collision found, apply reflexion
     for (int i = 0; i < WALLS_NUMBER; ++i) {
-        aux = CircleRectIntersect(ball, walls[i]);
+        direction = CircleRectIntersect(ball, walls[i]);
 
         // If collision found, skip the rest of the walls
-        if (aux != glm::vec3(0.0f, 0.0f, 0.0f)) {
-            direction = aux;
+        if (direction != glm::vec3(0.0f, 0.0f, 0.0f)) {
+            ChangeBallPositionAfterCollisionWall(i);
+            ChangeBallDirectionAfterCollision(direction);
             break;
         }
     }
-    ChangeBallDirectionAfterCollision(direction);
 }
 
 void Level::CheckPlatformCollisionAndUpdateBall() {
@@ -330,7 +359,7 @@ void Level::CheckBrickCollisionAndUpdateBall() {
     // Create a queue that will contain the bricks
     #define QUEUE_SIZE 4
     Brick *queue[QUEUE_SIZE];
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < QUEUE_SIZE; ++i) {
         queue[i] = NULL;
     }
 
